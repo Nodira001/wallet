@@ -15,7 +15,7 @@ type Service struct {
 	payments      []*types.Payment
 }
 
-func (s *Service) RegistAccount(phone types.Phone) (*types.Account, error) {
+func (s *Service) RegisterAccount(phone types.Phone) (*types.Account, error) {
 	for _, account := range s.accounts {
 		if account.Phone == phone {
 			return nil, ErrPhoneRegistered
