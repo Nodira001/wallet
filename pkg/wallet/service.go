@@ -2,7 +2,7 @@ package wallet
 
 import (
 	"errors"
-	"wallet/pkg/types"
+	"github.com/Nodira001/wallet/pkg/types"
 )
 
 var ErrPhoneRegistered = errors.New("phone already registered")
