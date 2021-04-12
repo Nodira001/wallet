@@ -157,7 +157,7 @@ func (s *Service) Repeat(paymentID string) (*types.Payment, error) {
 
 }
 
-type testService struct {
+type testService1 struct {
 	*Service
 }
 
