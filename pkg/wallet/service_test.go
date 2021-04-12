@@ -87,8 +87,29 @@ func TestService_Repeat_succes(t *testing.T) {
 	}
 	pament := payments[0]
 	_, err = s.Repeat(pament.ID)
-	if err!=nil {
+	if err != nil {
 		t.Error("asd")
-		return 
+		return
 	}
+}
+func TestService_Repeat_fail(t *testing.T) {
+	s := &Service{}
+	_, payments, err := s.addAccount(defultTestAccount)
+
+	if err != nil {
+		t.Error("asd")
+		return
+	}
+
+	pament := payments[0]
+	
+	pament.Amount += 9_000_00
+	
+	_, err = s.Repeat(pament.ID)
+	
+	if err == nil {
+		t.Error("asd")
+		return
+	}
+
 }

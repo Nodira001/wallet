@@ -102,17 +102,7 @@ func (s *Service) Pay(accountID int64, amount types.Money, category types.Paymen
 	s.payments = append(s.payments, payment)
 	return payment, nil
 }
-func (s *Service) addAccountWithBalance(phone types.Phone, money types.Money) (*types.Account, error) {
-	if money < 0 {
-		return nil, ErrAmountMustBePositive
-	}
-	acc, err := s.RegisterAccount(phone)
-	if err != nil {
-		return nil, err
-	}
-	acc.Balance += money
-	return acc, nil
-}
+ 
 
 func (s *Service) Reject(paymentID string) error {
 	payment, err := s.FindPaymentByID(paymentID)
