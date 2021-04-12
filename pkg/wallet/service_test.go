@@ -3,6 +3,8 @@ package wallet
 import (
 	"reflect"
 	"testing"
+
+	"github.com/Nodira001/wallet/pkg/types"
 )
 
 func TestService_AddAccountByID_success(t *testing.T) {
@@ -39,12 +41,54 @@ func TestService_FindAccountByID_success(t *testing.T) {
 	}
 
 }
-func TestService_FindAccountByID_fail(t *testing.T) {
+func TestService_Reject_succes(t *testing.T) {
 	svc := &Service{}
-	_, _ = svc.RegisterAccount("+992900800306")
-	_, err := svc.FindAccountByID(10)
-	if err != ErrAccountNotFound {
-		t.Errorf("FindAccountByID error %v,", err)
-	}
 
+	acc, err := svc.RegisterAccount("+992900800306")
+	if err != nil {
+		t.Error("test")
+	}
+	svc.payments = append(svc.payments, &types.Payment{
+		ID:        "10",
+		AccountID: acc.ID,
+		Amount:    1000,
+		Category:  "food",
+		Status:    types.PaymentStatusInProgress})
+	err = svc.Reject("10")
+	if err != nil {
+		t.Error("err 54 ", err, svc)
+	}
+}
+func TestService_Reject_fail(t *testing.T) {
+	svc := &Service{}
+
+	acc, err := svc.RegisterAccount("+992900800306")
+	if err != nil {
+		t.Error("test")
+	}
+	svc.payments = append(svc.payments, &types.Payment{
+		ID:        "10",
+		AccountID: acc.ID,
+		Amount:    1000,
+		Category:  "food",
+		Status:    types.PaymentStatusInProgress})
+	err = svc.Reject("0")
+	if err != ErrPaymentNotFound {
+		t.Error("err 54 ", err, svc)
+	}
+}
+
+func TestService_Repeat_succes(t *testing.T) {
+	s := &Service{}
+	_, payments, err := s.addAccount(defultTestAccount)
+	if err != nil {
+		t.Error("asd")
+		return
+	}
+	pament := payments[0]
+	_, err = s.Repeat(pament.ID)
+	if err!=nil {
+		t.Error("asd")
+		return 
+	}
 }
