@@ -80,7 +80,7 @@ func TestService_Reject_fail(t *testing.T) {
 
 func TestService_Repeat_succes(t *testing.T) {
 	s := &Service{}
-	_, payments, err := s.addAccount(defultTestAccount)
+	_, payments, err := s.addAccount(defultTestAccount1)
 	if err != nil {
 		t.Error("asd")
 		return
@@ -94,7 +94,7 @@ func TestService_Repeat_succes(t *testing.T) {
 }
 func TestService_Repeat_fail(t *testing.T) {
 	s := &Service{}
-	_, payments, err := s.addAccount(defultTestAccount)
+	_, payments, err := s.addAccount(defultTestAccount1)
 
 	if err != nil {
 		t.Error("asd")

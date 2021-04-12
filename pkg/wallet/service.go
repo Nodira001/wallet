@@ -161,7 +161,7 @@ type testService struct {
 	*Service
 }
 
-type testAccount struct {
+type testAccount1 struct {
 	phone    types.Phone
 	balance  types.Money
 	payments []struct {
@@ -170,7 +170,7 @@ type testAccount struct {
 	}
 }
 
-var defultTestAccount = testAccount{
+var defultTestAccount1 = testAccount1{
 	phone:   "+992900880306",
 	balance: 10_000_00,
 	payments: []struct {
@@ -181,7 +181,7 @@ var defultTestAccount = testAccount{
 	},
 }
 
-func (s *Service) addAccount(data  testAccount) (*types.Account, []*types.Payment, error) {
+func (s *Service) addAccount(data  testAccount1) (*types.Account, []*types.Payment, error) {
 	// тестируем пользователя
 	account, err := s.RegisterAccount(data.phone)
 	if err != nil {
