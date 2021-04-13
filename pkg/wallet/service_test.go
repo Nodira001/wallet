@@ -102,14 +102,47 @@ func TestService_Repeat_fail(t *testing.T) {
 	}
 
 	pament := payments[0]
-	
+
 	pament.Amount += 9_000_00
-	
+
 	_, err = s.Repeat(pament.ID)
-	
+
 	if err == nil {
 		t.Error("asd")
 		return
+	}
+}
+func TestService_FavoritePayment_succes(t *testing.T) {
+	s := &Service{}
+	_, payments, err := s.addAccount(defultTestAccount1)
+
+	if err != nil {
+		t.Error("asd")
+		return
+	}
+	_, err = s.FavoritePayment(payments[0].ID, "Jenya")
+	if err != nil {
+		t.Error("FavoriPayment(): error")
+	}
+}
+func TestService_PayFromFavorite_succes(t *testing.T) {
+	s := &Service{}
+	acc, payments, err := s.addAccount(defultTestAccount1)
+
+	if err != nil {
+		t.Error("asd")
+		return
+	}
+
+	fav, err := s.FavoritePayment(payments[0].ID, "Jenya")
+	if err != nil {
+		t.Error("FavoriPayment(): error", acc.Balance)
+	}
+	_, err = s.PayFromFavorite(fav.ID)
+	if err != nil {
+		t.Error("sdfgh")
+		return
+
 	}
 
 }
