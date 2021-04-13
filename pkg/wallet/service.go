@@ -14,13 +14,13 @@ var ErrAccountNotFound = errors.New("account not found")
 var ErrPaymentNotFound = errors.New("payment not found")
 var ErrNotEnoughBalance = errors.New("payment is not enough")
 var ErrAccountNotFond = errors.New("reject")
-var ErrFavoritePaymentNotFound = errors.New("payment is not enough")
+var ErrFavoriteNotFound = errors.New("payment is not enough")
 
 type Service struct {
 	nextAccountID int64
 	accounts      []*types.Account
 	payments      []*types.Payment
-	favorites    []*types.Favorite	
+	favorites     []*types.Favorite
 }
 
 func (s *Service) RegisterAccount(phone types.Phone) (*types.Account, error) {
@@ -206,27 +206,27 @@ func (s *Service) addAccount(data testAccount1) (*types.Account, []*types.Paymen
 	return account, payments, nil
 }
 func (s *Service) FindFavoritePayment(paymentID string) (*types.Favorite, error) {
-	payment :=types.Favorite {}
+	payment := types.Favorite{}
 	for _, paymentf := range s.favorites {
 		if paymentf.ID == paymentID {
-			payment =*paymentf
+			payment = *paymentf
 			return &payment, nil
 		}
 	}
-	return nil, ErrFavoritePaymentNotFound
+	return nil, ErrFavoriteNotFound
 }
 
 func (s *Service) FavoritePayment(paymentID string, name string) (*types.Favorite, error) {
-payment, err := s.FindPaymentByID(paymentID)
-if err != nil {
-	return nil, err	
-}
-	newFavorite := types.Favorite {
-		ID:uuid.NewString(),
+	payment, err := s.FindPaymentByID(paymentID)
+	if err != nil {
+		return nil, err
+	}
+	newFavorite := types.Favorite{
+		ID:        uuid.NewString(),
 		AccountID: payment.AccountID,
-		Name: name,
-		Amount: payment.Amount,
-		Category: payment.Category,
+		Name:      name,
+		Amount:    payment.Amount,
+		Category:  payment.Category,
 	}
 	s.favorites = append(s.favorites, &newFavorite)
 	return &newFavorite, nil
@@ -235,24 +235,24 @@ if err != nil {
 func (s *Service) PayFromFavorite(favoriteID string) (*types.Payment, error) {
 	favoritePayment, err := s.FindFavoritePayment(favoriteID)
 	if err != nil {
-	  return nil, err
+		return nil, err
 	}
 	acc, err := s.FindAccountByID(favoritePayment.AccountID)
 	if err != nil {
-	  return nil, err
+		return nil, err
 	}
 	if acc.Balance < favoritePayment.Amount {
-	  return nil, ErrNotEnoughBalance
+		return nil, ErrNotEnoughBalance
 	}
-  
+
 	newPayment := types.Payment{
-	  ID:        uuid.NewString(),
-	  AccountID: favoritePayment.AccountID,
-	  Amount:    favoritePayment.Amount,
-	  Category:  favoritePayment.Category,
-	  Status:    types.PaymentStatusInProgress,
+		ID:        uuid.NewString(),
+		AccountID: favoritePayment.AccountID,
+		Amount:    favoritePayment.Amount,
+		Category:  favoritePayment.Category,
+		Status:    types.PaymentStatusInProgress,
 	}
 	acc.Balance -= favoritePayment.Amount
 	s.payments = append(s.payments, &newPayment)
 	return &newPayment, nil
-  }
+}
