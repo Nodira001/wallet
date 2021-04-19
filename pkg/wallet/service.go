@@ -3,6 +3,8 @@ package wallet
 import (
 	"errors"
 	"fmt"
+	"log"
+	"os"
 
 	"github.com/Nodira001/wallet/pkg/types"
 	"github.com/google/uuid"
@@ -255,4 +257,24 @@ func (s *Service) PayFromFavorite(favoriteID string) (*types.Payment, error) {
 	acc.Balance -= favoritePayment.Amount
 	s.payments = append(s.payments, &newPayment)
 	return &newPayment, nil
+}
+func (s *Service) ExportToFile(path string) error {
+	file, err := os.Create(path)
+	if err != nil {
+		log.Print(err)
+		return err
+	}
+	defer file.Close()
+	for _, account := range s.accounts {
+		row := fmt.Sprint(account.ID) + ";" + fmt.Sprint(account.Phone) + ";" + fmt.Sprint(account.Balance) + "|"
+		_, err = file.Write([]byte(row))
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+func (s *Service) ImportFromFile(path string) error {
+
+	return nil
 }
