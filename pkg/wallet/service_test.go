@@ -2,10 +2,8 @@ package wallet
 
 import (
 	"fmt"
-	"log"
-	"os"
+	 
 	"reflect"
-	"strconv"
 	"testing"
 
 	"github.com/Nodira001/wallet/pkg/types"
@@ -150,98 +148,7 @@ func TestService_PayFromFavorite_succes(t *testing.T) {
 	}
 
 }
-func (s *Service) Export(dir string) error {
-  
-	if len(s.accounts) > 0 {
-  
-	  accountsFile, err := os.Create(dir + "/accounts.dump")
-  
-	  if err != nil {
-		log.Println(err)
-		return err
-	  }
-  
-	  defer func() {
-		if accErr := accountsFile.Close(); accErr != nil {
-		  log.Print(accErr)
-		  return
-		}
-	  }()
-  
-	  for _, account := range s.accounts {
-  
-		accountsRow := strconv.FormatInt(account.ID, 10) + ";" + string(account.Phone) + ";" + string(strconv.FormatInt(int64(account.Balance), 10)) + "\n"
-		_, err = accountsFile.Write([]byte(accountsRow))
-		if err != nil {
-		  log.Print(err)
-		  return err
-		}
-	  }
-	}
-	if len(s.payments) > 0 {
-	  paymentsFile, err := os.Create(dir + "/payments.dump")
-	  if err != nil {
-		log.Println(err)
-		return err
-	  }
-  
-	  defer func() {
-		if payErr := paymentsFile.Close(); payErr != nil {
-		  log.Print(payErr)
-		  return
-		}
-	  }()
-  
-	  for _, payment := range s.payments {
-  
-		paymentsRow := payment.ID + ";" + strconv.FormatInt(payment.AccountID, 10) + ";" + strconv.FormatInt(int64(payment.Amount), 10) + ";" + string(payment.Category) + ";" + string(payment.Status) + "\n"
-		_, err = paymentsFile.Write([]byte(paymentsRow))
-		if err != nil {
-		  log.Print(err)
-		  return err
-		}
-	  }
-	}
-  
-	if len(s.favorites) > 0 {
-	  favoritesFile, err := os.Create(dir + "/favorites.dump")
-  
-	  if err != nil {
-		log.Println(err)
-		return err
-	  }
-  
-	  defer func() {
-		if favErr := favoritesFile.Close(); favErr != nil {
-		  log.Print(favErr)
-		  return
-		}
-	  }()
-  
-	  for _, favorite := range s.favorites {
-  
-		favoriteRow := favorite.ID + ";" + strconv.FormatInt(int64(favorite.AccountID), 10) + ";" + strconv.FormatInt(int64(favorite.Amount), 10) + ";" + favorite.Name + ";" + string(favorite.Category) + "\n"
-		_, err = favoritesFile.Write([]byte(favoriteRow))
-		if err != nil {
-		  log.Print(err)
-		  return err
-		}
-	  }
-	}
-	fmt.Println("nextAccountID", s.nextAccountID, "accounts->>", len(s.accounts), "payments->>", len(s.payments), "favorites->>", len(s.favorites))
-	fmt.Println("start")
-	for _, v := range s.accounts {
-	  fmt.Println(v)
-	}
-	for _, v := range s.payments {
-	  fmt.Println(v)
-	}
-	for _, v := range s.favorites {
-	  fmt.Println(v)
-	}
-	fmt.Println("stop")
-	return nil
-  }
+ 
 func TestService_FullExport(t *testing.T) {
 	s := &Service{}
   
